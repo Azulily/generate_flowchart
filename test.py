@@ -1,0 +1,2 @@
+print("remote")
+print("debug")
