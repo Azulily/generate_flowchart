@@ -1,4 +1,6 @@
 import re
+import numpy as np
+np.set_printoptions(threshold=np.inf)
 
 def generate_flowchart(urls):
     nodes = {}
@@ -23,7 +25,7 @@ def generate_flowchart(urls):
     # フローチャートのMarkdownを返す
     return f"""```mermaid
 flowchart TB
-{node_md}
+{urls}
 {link_md}
 ```"""
 urls = [
