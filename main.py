@@ -1,11 +1,9 @@
 import re
-import numpy as np
-np.set_printoptions(threshold=np.inf)
-
+import convert_csv_to_array
 def generate_flowchart(urls):
     nodes = {}
     links = []
-    for url in urls:
+    for url,title in urls:
         segments = url.split("/")
         parent = ""
         for i, segment in enumerate(segments):
@@ -13,7 +11,11 @@ def generate_flowchart(urls):
             if node_id not in nodes:
                 nodes[node_id] = f"{node_id}"
             if parent:
-                links.append(f"{nodes[parent]} --> {nodes[node_id]}")
+                parent_to_find = nodes[parent]
+                child_to_find = nodes[node_id]
+                parent_title = [arr[1] for arr in urls if parent_to_find in arr][0]
+                child_title =  [arr[1] for arr in urls if child_to_find in arr][0]
+                links.append(f"{nodes[parent]+ '['+ parent_title  + ']'} --> {nodes[node_id]+ '['+ child_title + ']'}")
             parent = node_id
     # ノードを名前でソート
     sorted_nodes = sorted(nodes.values())
@@ -25,19 +27,18 @@ def generate_flowchart(urls):
     # フローチャートのMarkdownを返す
     return f"""```mermaid
 flowchart TB
-{urls}
 {link_md}
 ```"""
-urls = [
-    'sample.com',
-    'sample.com/a',
-    'sample.com/b',
-    'sample.com/c',
-    'sample.com/d',
-    'sample.com/a/aa',
-    'sample.com/a/bb',
-    'sample.com/a/cc',
-    'sample.com/b/cc',
-]
+urls = [['sample.com','title1'],
+['sample.com/a','title2'],
+['sample.com/b','title3'],
+['sample.com/c','title4'],
+['sample.com/d','title5'],
+['sample.com/a/aa','title6'],
+['sample.com/a/bb','title7'],
+['sample.com/a/cc','title8'],
+['sample.com/b/cc','title9'],]
+
+urls = convert_csv_to_array.read_csv()
 flowchart_md = generate_flowchart(urls)
 print(flowchart_md)
